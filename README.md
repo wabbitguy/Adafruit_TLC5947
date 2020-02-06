@@ -18,3 +18,5 @@ BSD license, check license.txt for more information
 All text above must be included in any redistribution
 
 To install, use the Arduino Library Manager and search for "Adafruit TLC5947" and install the library.
+
+Version updated to support blanking control for the write phase of the driver. Blanking resets the internal oscillator of the TLC5947 and helps to reduce any flickering caused by updating the outputs during the PWM cycle of the TLC5947. Blanking resets the PWM cycle. This optional blanking mode requires a four wire connection to the Adafruit_TLC5947.
