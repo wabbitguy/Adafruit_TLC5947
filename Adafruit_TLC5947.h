@@ -30,6 +30,7 @@
 class Adafruit_TLC5947 {
 public:
   Adafruit_TLC5947(uint16_t n, uint8_t c, uint8_t d, uint8_t l);
+  Adafruit_TLC5947(uint16_t n, uint8_t c, uint8_t d, uint8_t l, int8_t b);// blanking output during write to reduce flickering
 
   boolean begin(void);
 
@@ -42,6 +43,7 @@ private:
 
   uint16_t numdrivers;
   uint8_t _clk, _dat, _lat;
+  int8_t _blank;// either -1 for no blanking during write or output # for blanking
 };
 
 #endif
