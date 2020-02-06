@@ -46,11 +46,36 @@ Adafruit_TLC5947::Adafruit_TLC5947(uint16_t n, uint8_t c, uint8_t d,
   _clk = c;
   _dat = d;
   _lat = l;
+  _blank = -1;
 
   pwmbuffer = (uint16_t *)malloc(2 * 24 * n);
   memset(pwmbuffer, 0, 2 * 24 * n);
 }
 
+/*!
+ *    @brief  Instantiates a new TLC5947 class with blanking
+ *    @param  n
+ *            num of drivers (boards)
+ *    @param  c
+ *            Arduino pin connected to TLC5947 clock pin
+ *    @param  d
+ *            Arduino pin connected to TLC5947 data pin
+ *    @param  l
+ *            Arduino pin connected to TLC5947 latch pin
+ *    @param  b
+ *            Arduino pin connected to TLC5947 blanking pin (marked oe on Adafruit PCB)
+ */
+Adafruit_TLC5947::Adafruit_TLC5947(uint16_t n, uint8_t c, uint8_t d,
+                                   uint8_t l, int8_t b) {
+  numdrivers = n;
+  _clk = c;
+  _dat = d;
+  _lat = l;
+  _blank = b;
+
+  pwmbuffer = (uint16_t *)malloc(2 * 24 * n);
+  memset(pwmbuffer, 0, 2 * 24 * n);
+}
 
 /*!
  *    @brief  Writes PWM data to the all connected TLC5947 boards
@@ -72,15 +97,18 @@ void Adafruit_TLC5947::write() {
     }
   }
   digitalWrite(_clk, LOW);
-
+//
+  if (_blank != -1) digitalWrite(_blank, HIGH);// if blanking is wired and enabled, turn outputs OFF (resets internal OSC)
   digitalWrite(_lat, HIGH);
+//
+  if (_blank != -1) digitalWrite(_blank, LOW);// if blanking is wired and enabled, turn outputs ON (start internal OSC) 
   digitalWrite(_lat, LOW);
 }
 
 /*!
  *    @brief  Set the PWM channel / value
  *    @param  chan
- *            channel number ([0 - 23] on each board, so chanel 2 for second board will be 25)
+ *            channel number ([0 - 23] on each board, so channel 2 for second board will be 25)
  *    @param  pwm
  *            pwm value [0-4095]
  */
@@ -121,6 +149,10 @@ boolean Adafruit_TLC5947::begin() {
   pinMode(_clk, OUTPUT);
   pinMode(_dat, OUTPUT);
   pinMode(_lat, OUTPUT);
+ if (_blank != -1) {// if blank is enabled, define the output pin and enable the outputs
+   pinMode(_blank, OUTPUT);
+   digitalWrite(_blank, LOW);
+  }
   digitalWrite(_lat, LOW);
 
   return true;
