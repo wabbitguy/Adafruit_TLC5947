@@ -1,0 +1,18 @@
+#######################################
+# Syntax Coloring Map For TLC5940
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+Adafruit_TLC5947	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+setPWM		KEYWORD2
+write		KEYWORD2
+setLED		KEYWORD2
+begin		KEYWORD2
